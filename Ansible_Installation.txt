@@ -243,7 +243,7 @@ Ansible sections are the sections we need to write in a playbook.
 * To run a playbook with elevated privileges(where "root" user login is not permitted):
 # ansible-playbook install_software.yml -i inventory.txt -b
 
-* Sample Apache Webserver installation playbook:
+* Sample Apache Webserver installation playbook(available in repository):
 # Check install_httpd.yml file
 
 ## Ansible Handlers & Templates ##
@@ -251,9 +251,10 @@ Ansible sections are the sections we need to write in a playbook.
 Handlers are lists of tasks, not really any different from regular tasks, that are referenced by a globally unique name, and are notified by notifiers.
 Ansible uses Jinja2 templating to enable dynamic expressions and access to variables. It has a .j2 extension.
 
-* Sample template file:
-# cat current.html.j2
+* Sample template file(available in repository):
+# cat new_index.html.j2
 <html><h1>This is a test webpage running from {{ ansible_hostname }} </h1></html>
 
-* Updated Apache Webserver installation playbook with handler & template:
+* Updated Apache Webserver installation playbook with handler & template(available in repository):
 # Check install_httpd_updated.yml file
+# Run the playbook and browse to http://IP/new_index.html
