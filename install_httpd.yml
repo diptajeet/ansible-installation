@@ -1,0 +1,16 @@
+# Playbook to install apache webserver
+---
+- hosts: labservers
+  gather_facts: false
+  tasks:
+   - name: Update system with all latest patches
+     yum: name='*' state=latest update_cache=yes
+     
+   - name: Installing httpd package
+     yum: name=httpd state=present
+     
+   - name: Copy webserver data file
+     copy: src=index.html dest=/var/www/html
+   
+   - name: Start Webserver
+     service: name=httpd state=started enabled=yes

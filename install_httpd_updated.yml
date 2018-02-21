@@ -1,0 +1,21 @@
+# Playbook to install apache webserver using a template
+---
+- hosts: labservers
+  tasks:
+   - name: Update system with all latest patches
+     yum: name='*' state=latest update_cache=yes
+     
+   - name: Installing httpd package
+     yum: name=httpd state=present
+      
+   - name: Stop Webserver
+     service: name=httpd state=stopped
+     
+   - name: Copy template file
+     template: src=new_index.html.j2 dest=/var/www/html/new_index.html
+     notify: 
+      - Restart_Apache
+      
+  handlers:
+   - name: Restart_Apache
+     service: name=httpd state=restarted

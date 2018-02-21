@@ -220,14 +220,14 @@ Ansible sections are the sections we need to write in a playbook.
 * Sample ansible playbook to install HTTPD
 ---
 - hosts: labservers
+  gather_facts: false
   vars:
-   - package1: 'httpd'
+   - package1: 'nmap'
   tasks:
-   - name: Install HTTPD package
+   - name: Installing nmap package
      yum: name={{package1}} state=present
 	 
 * Run the playbook 
-
 # ansible-playbook install_software.yml -i inventory.txt
 
 * To stop gathering facts from hosts on every playbook run
@@ -235,10 +235,25 @@ Ansible sections are the sections we need to write in a playbook.
 - hosts: labservers
   gather_facts: false
   vars:
-   - package1: 'httpd'
+   - package1: 'nmap'
   tasks:
-   - name: Install HTTPD package
+   - name: Installing nmap package
      yum: name={{package1}} state=present
-	 
 
+* To run a playbook with elevated privileges(where "root" user login is not permitted):
+# ansible-playbook install_software.yml -i inventory.txt -b
 
+* Sample Apache Webserver installation playbook:
+# Check install_httpd.yml file
+
+## Ansible Handlers & Templates ##
+
+Handlers are lists of tasks, not really any different from regular tasks, that are referenced by a globally unique name, and are notified by notifiers.
+Ansible uses Jinja2 templating to enable dynamic expressions and access to variables. It has a .j2 extension.
+
+* Sample template file:
+# cat current.html.j2
+<html><h1>This is a test webpage running from {{ ansible_hostname }} </h1></html>
+
+* Updated Apache Webserver installation playbook with handler & template:
+# Check install_httpd_updated.yml file
