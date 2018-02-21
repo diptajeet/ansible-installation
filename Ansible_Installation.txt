@@ -67,7 +67,7 @@ localhost ansible_connection=local ansible_python_interpreter=python
 # ssh root@ansible-node2 "chmod go-rwx ~/.ssh ~/.ssh/authorized_keys"
 
 	For AWS:
-	#eval `ssh-agent` -s
+	#eval `ssh-agent -s`
 	#ssh-add MyKey.pem
 
 * Check ansible setup:
