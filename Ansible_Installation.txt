@@ -258,3 +258,10 @@ Ansible uses Jinja2 templating to enable dynamic expressions and access to varia
 * Updated Apache Webserver installation playbook with handler & template(available in repository):
 # Check install_httpd_updated.yml file
 # Run the playbook and browse to http://IP/new_index.html
+
+## Ansible Playbook Debug ##
+
+Debugging helps to understand any causes of failure within a playbook.
+
+* Sample debug playbook(available in repository):
+# Check debug.yml

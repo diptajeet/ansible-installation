@@ -1,0 +1,11 @@
+# Playbook with debug example
+---
+- hosts: labservers
+  gather_facts: false
+  tasks:
+   - name: Check uptime
+     shell: uptime
+     register: var_uptime
+   
+   - name: Print uptime
+     debug: var=var_uptime
