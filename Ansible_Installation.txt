@@ -155,5 +155,7 @@ ansible-node2 | SUCCESS => {
     "uid": 0
 }
 
+# ansible labservers -m command -a "rm -f /tmp/test.txt" -i inventory.txt => Removes the test.txt file from labservers group copied in earlier step
+
 *Check all available modules in ansible:
 # ansible-doc -l
