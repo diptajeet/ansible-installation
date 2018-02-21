@@ -1,0 +1,159 @@
+## Installation of Ansible on RHEL ##
+
+# subscription-manager status
+# subscription-manager register
+# subscription-manager repos
+# subscription-manager status
+# subscription-manager attach --auto-attach
+# subscription-manager auto-attach
+# yum repolist all
+# subscription-manager repos --enable rhel-7-server-extras-rpms
+# yum repolist enabled
+# yum info ansible
+# yum install ansible -y
+
+## Check/Verify Ansible installation ##
+
+# ansible --version
+ansible 2.4.2.0
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 2.7.5 (default, May  3 2017, 07:55:04) [GCC 4.8.5 20150623 (Red Hat 4.8.5-14)]
+
+## Ansible environment setup ##
+
+Default : /etc/ansible/ansible.cfg
+inventory      = /etc/ansible/hosts
+roles_path    = /etc/ansible/roles:/usr/share/ansible/roles
+
+Priority of ansible configuration files:
+ANSIBLE_CONFIG (Environment variable)
+ansible.cfg (Inside the current directory where the commands are ran)
+.ansible.cfg (Inside users home directory)
+/etc/ansible/ansible.cfg
+
+## Ansible Inventory ##
+
+Default : /etc/ansible/hosts
+Inventory files are written in INI format & ansible inventory supports host variables, group variables and groups of group.
+
+*Example of specific inventory:
+# cat inventory.txt
+[lab_hosts]
+ansible-node1  ansible_user=root  ansible_hostname=ansible-node1
+ansible-node2  ansible_user=root  ansible_hostname=ansible-node2
+
+*Example of default inventory:
+[labservers]
+ansible-node1 ansible_user=root
+ansible-node2 ansible_user=root
+
+[webservers]
+ansible-node1 ansible_user=root
+
+[dbservers]
+ansible-node2 ansible_user=root
+
+[localhosts]
+localhost ansible_connection=local ansible_python_interpreter=python
+
+*Setup passwordless authentication from Ansible controller node(For AWS use the .pem file):
+# ssh-keygen -t rsa
+# cat ~/.ssh/id_rsa.pub | ssh root@ansible-node1 'cat >> .ssh/authorized_keys'
+# cat ~/.ssh/id_rsa.pub | ssh root@ansible-node2 'cat >> .ssh/authorized_keys'
+# ssh root@ansible-node1 "chmod go-rwx ~/.ssh ~/.ssh/authorized_keys"
+# ssh root@ansible-node2 "chmod go-rwx ~/.ssh ~/.ssh/authorized_keys"
+
+	For AWS:
+	#eval `ssh-agent` -s
+	#ssh-add MyKey.pem
+
+*Check ansible setup:
+# ansible -m ping all => Ping all hosts defined under /etc/ansible/hosts
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ansible-node1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ansible-node2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+# ansible lab_hosts -m ping -i inventory.txt => Ping only a host group defined under inventory.txt
+ansible-node1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ansible-node2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+# ansible dbservers -m ping -i inventory.txt => Ping only a host group defined under inventory.txt
+ansible-node2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+# ansible webservers -m ping -i inventory.txt => Ping only a host group defined under inventory.txt
+ansible-node1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+# ansible -m setup all => Check all hardware & other info
+
+## Ansible ad-hoc commands ##
+
+# ansible labservers -m command -a "uptime" -i inventory.txt
+ansible-node1 | SUCCESS | rc=0 >>
+ 16:17:42 up 34 min,  2 users,  load average: 0.00, 0.00, 0.00
+
+ansible-node2 | SUCCESS | rc=0 >>
+ 16:17:43 up 34 min,  2 users,  load average: 0.00, 0.00, 0.00
+
+# ansible labservers -m command -a "uptime" -f 10 -i inventory.txt => For parallel runs i.e multiple hosts at a single time(using forks), run the command using "-f" option
+ansible-node2 | SUCCESS | rc=0 >>
+ 16:19:47 up 36 min,  2 users,  load average: 0.00, 0.00, 0.00
+
+ansible-node1 | SUCCESS | rc=0 >>
+ 16:19:46 up 36 min,  2 users,  load average: 0.00, 0.00, 0.00
+
+
+# ansible labservers -m copy -a "src=test.txt dest=/tmp/test.txt" -i inventory.txt => Copy file test.txt to nodes from group labservers(Disable selinux or install libselinux-python)
+ansible-node1 | SUCCESS => {
+    "changed": true,
+    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "dest": "/tmp/test.txt",
+    "gid": 0,
+    "group": "root",
+    "md5sum": "d41d8cd98f00b204e9800998ecf8427e",
+    "mode": "0644",
+    "owner": "root",
+    "size": 0,
+    "src": "/root/.ansible/tmp/ansible-tmp-1519191036.01-280787496406350/source",
+    "state": "file",
+    "uid": 0
+}
+ansible-node2 | SUCCESS => {
+    "changed": true,
+    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "dest": "/tmp/test.txt",
+    "gid": 0,
+    "group": "root",
+    "md5sum": "d41d8cd98f00b204e9800998ecf8427e",
+    "mode": "0644",
+    "owner": "root",
+    "size": 0,
+    "src": "/root/.ansible/tmp/ansible-tmp-1519191036.0-249749878035096/source",
+    "state": "file",
+    "uid": 0
+}
+
+*Check all available modules in ansible:
+# ansible-doc -l
