@@ -39,13 +39,13 @@ ansible.cfg (Inside the current directory where the commands are ran)
 Default : /etc/ansible/hosts
 Inventory files are written in INI format & ansible inventory supports host variables, group variables and groups of group.
 
-*Example of specific inventory:
+* Example of specific inventory:
 # cat inventory.txt
 [lab_hosts]
 ansible-node1  ansible_user=root  ansible_hostname=ansible-node1
 ansible-node2  ansible_user=root  ansible_hostname=ansible-node2
 
-*Example of default inventory:
+* Example of default inventory:
 [labservers]
 ansible-node1 ansible_user=root
 ansible-node2 ansible_user=root
@@ -59,7 +59,7 @@ ansible-node2 ansible_user=root
 [localhosts]
 localhost ansible_connection=local ansible_python_interpreter=python
 
-*Setup passwordless authentication from Ansible controller node(For AWS use the .pem file):
+* Setup passwordless authentication from Ansible controller node(For AWS use the .pem file):
 # ssh-keygen -t rsa
 # cat ~/.ssh/id_rsa.pub | ssh root@ansible-node1 'cat >> .ssh/authorized_keys'
 # cat ~/.ssh/id_rsa.pub | ssh root@ansible-node2 'cat >> .ssh/authorized_keys'
@@ -70,7 +70,7 @@ localhost ansible_connection=local ansible_python_interpreter=python
 	#eval `ssh-agent` -s
 	#ssh-add MyKey.pem
 
-*Check ansible setup:
+* Check ansible setup:
 # ansible -m ping all => Ping all hosts defined under /etc/ansible/hosts
 localhost | SUCCESS => {
     "changed": false,
@@ -157,5 +157,88 @@ ansible-node2 | SUCCESS => {
 
 # ansible labservers -m command -a "rm -f /tmp/test.txt" -i inventory.txt => Removes the test.txt file from labservers group copied in earlier step
 
-*Check all available modules in ansible:
+* Check all available modules in ansible:
 # ansible-doc -l
+
+## Ansible Facts ##
+
+Facts are details or information derived from remote hosts & can be used as variables in Ansible Playbooks
+
+* Gather all facts from all systems:
+# ansible all -m setup => Might take time depending on your list of servers & shall generate enormous amount of data!
+
+*Gather kernel information from remote host group called labservers
+# ansible labservers -m setup -i inventory.txt | grep kernel
+        "ansible_kernel": "2.6.32-696.20.1.el6.x86_64",
+        "ansible_kernel": "2.6.32-696.20.1.el6.x86_64",
+		
+*Gather virtual network interface information from remote host group called labservers
+# ansible all -m setup -a 'gather_subset=network filter=ansible_all_ipv4_addresses' -i inventory.txt
+ansible-node2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "192.168.16.61"
+        ]
+    },
+    "changed": false
+}
+ansible-node1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "192.168.16.60"
+        ]
+    },
+    "changed": false
+}
+
+## Ansible Variable ##
+
+Ansible variable is a temporary placeholder for a piece of data in computers memory.
+
+* Valid variable naming convention:
+	- Cannot use "-" (hyphen)
+	- Can be alphanumeric
+	- Should start with an alphabet
+	- No spaces
+	
+## Ansible Sections ##
+
+Ansible sections are the sections we need to write in a playbook.
+
+* Sections:
+	- Target section (Mandatory)
+	- Variable section
+	- Task section (Mandatory)
+	- Handler section
+	- Loop section
+	- Conditional section
+	- Until section
+	- Notify section
+
+## Ansible Playbook ##
+
+* Sample ansible playbook to install HTTPD
+---
+- hosts: labservers
+  vars:
+   - package1: 'httpd'
+  tasks:
+   - name: Install HTTPD package
+     yum: name={{package1}} state=present
+	 
+* Run the playbook 
+
+# ansible-playbook install_software.yml -i inventory.txt
+
+* To stop gathering facts from hosts on every playbook run
+---
+- hosts: labservers
+  gather_facts: false
+  vars:
+   - package1: 'httpd'
+  tasks:
+   - name: Install HTTPD package
+     yum: name={{package1}} state=present
+	 
+
+
