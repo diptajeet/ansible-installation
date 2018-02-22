@@ -245,7 +245,7 @@ Ansible sections are the sections we need to write in a playbook.
 * Sample Apache Webserver installation playbook(available in repository):
 # Check install_httpd.yml file
 
-## Ansible Handlers & Templates ##
+## Ansible Handlers & Templates section ##
 
 Handlers are lists of tasks, not really any different from regular tasks, that are referenced by a globally unique name, and are notified by notifiers.
 Ansible uses Jinja2 templating to enable dynamic expressions and access to variables. It has a .j2 extension.
@@ -258,10 +258,21 @@ Ansible uses Jinja2 templating to enable dynamic expressions and access to varia
 # Check install_httpd_updated.yml file
 # Run the playbook and browse to http://IP/new_index.html
 
-## Ansible Playbook Debug ##
+## Ansible Playbook Debug section ##
 
 Debugging helps to understand any causes of failure within a playbook.
 
 * Sample debug playbook(available in repository):
 # Check debug.yml
 # Check debug_updated.yml
+
+## Ansible Loops section ##
+
+Ansible loops are used to do many tasks under a single task. It repeats itself till a state is achieved.
+
+* Sample playbook with loops(available in repository):
+# Check ansible_loops.yml
+
+## Ansible Conditionals and Until section ##
+
+

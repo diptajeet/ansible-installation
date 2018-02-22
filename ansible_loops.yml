@@ -1,0 +1,16 @@
+# Playbook with loop example
+---
+- name: Sample playbook with example loop
+  gather_facts: false
+  hosts: labservers
+  tasks:
+  - name: Install packages httpd, nmap & vsftpd
+    yum: name={{ item }} state=present update_cache=no
+    with_items:
+     - httpd
+     - nmap
+     - vsftpd
+    register: software_state
+    
+  - name: Print installation status
+    debug: var=software_state
