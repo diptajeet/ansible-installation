@@ -4,7 +4,6 @@
 # subscription-manager register
 # subscription-manager repos
 # subscription-manager status
-# subscription-manager attach --auto-attach
 # subscription-manager auto-attach
 # yum repolist all
 # subscription-manager repos --enable rhel-7-server-extras-rpms
