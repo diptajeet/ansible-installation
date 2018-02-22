@@ -271,8 +271,10 @@ Debugging helps to understand any causes of failure within a playbook.
 Ansible loops are used to do many tasks under a single task. It repeats itself till a state is achieved.
 
 * Sample playbook with loops(available in repository):
-# Check ansible_loops.yml
+# Check ansible_loops.yml for Ansible loops example.
 
 ## Ansible Conditionals and Until section ##
 
-
+* Sample playbook with conditionals(available in repository):
+# Check ansible_conditional.yml for Ansible conditional example.
+# Check ansible_until.yml for Ansible until example.

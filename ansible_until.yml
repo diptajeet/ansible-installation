@@ -1,0 +1,12 @@
+# Playbook with until example
+---
+- name: Playbook with until example
+  hosts: labservers
+  tasks:
+   - name: Check if httpd service is started.
+     shell: service httpd status
+     register: result_httpd
+     when: ansible_hostname == 'ansible-node1'
+     until: result_httpd.stdout.find("running") != -1
+     retries: 5
+     delay: 5
