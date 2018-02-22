@@ -264,3 +264,4 @@ Debugging helps to understand any causes of failure within a playbook.
 
 * Sample debug playbook(available in repository):
 # Check debug.yml
+# Check debug_updated.yml

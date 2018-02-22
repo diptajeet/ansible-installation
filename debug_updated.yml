@@ -1,0 +1,17 @@
+# Playbook to debug a copy task
+---
+- hosts: labservers
+  gather_facts: false
+  tasks:
+   - name: Installing httpd package
+     yum: name=httpd state=present
+     
+   - name: Copy webserver data file
+     copy: src=index.html dest=/var/www/html
+     register: copy_status
+     
+   - name: Print copy status
+     debug: var=copy_status
+   
+   - name: Start Webserver
+     service: name=httpd state=started enabled=yes
