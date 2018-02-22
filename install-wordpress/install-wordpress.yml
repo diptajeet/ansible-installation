@@ -1,0 +1,14 @@
+# Playbook to install Wordpress Server
+---
+- name: Installing MySQL
+  hosts: dbservers
+  roles:
+    - server
+    - mysql
+
+- name: Installing Wordpress
+  hosts: webservers
+  roles:
+    - server
+    - php
+    - wordpress

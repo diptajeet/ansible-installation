@@ -1,0 +1,16 @@
+# Playbook to install MySQL Database and create user
+---
+- name: Install python mysql bindings
+  yum: name=MySQL-python state=installed
+  
+- name: Start mysql database process
+  service: name=mysqld state=started enabled=yes
+   
+- name: Create mysql database
+  mysql_db: name={{ wordpress_db }} state=present
+  
+- name: Create mysql user
+  mysql_user:
+    name={{ wordpress_db_user }}
+    password={{ wordpress_db_pass }}
+    priv=*.*:ALL

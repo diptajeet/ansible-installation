@@ -1,0 +1,15 @@
+# Playbook to install pre-requiste packages
+---
+- name: Install prerequisites
+  yum: name="@Development Tools" state=present
+  
+- name: Install required software
+  yum: name='{{ item }}' state=present update_cache=yes
+  with_items:
+  - httpd
+  - MySQL-python
+  - mysql-server
+  - mysql
+  - php
+  - php-mysql
+  

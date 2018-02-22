@@ -109,6 +109,9 @@ ansible-node1 | SUCCESS => {
 
 ## Ansible ad-hoc commands ##
 
+* Format:
+# ansible <HOSTNAME/LIST OF SERVERS> -m <ANSIBLE MODULE> -a <MODULE ARGUMENTS>
+
 # ansible labservers -m command -a "uptime" -i inventory.txt
 ansible-node1 | SUCCESS | rc=0 >>
  16:17:42 up 34 min,  2 users,  load average: 0.00, 0.00, 0.00
@@ -278,3 +281,50 @@ Ansible loops are used to do many tasks under a single task. It repeats itself t
 * Sample playbook with conditionals(available in repository):
 # Check ansible_conditional.yml for Ansible conditional example.
 # Check ansible_until.yml for Ansible until example.
+
+## Ansible Vault ##
+
+Ansible vault is a feature of ansible that allows keeping sensitive data such as passwords or keys in encrypted files, rather than as plaintext in your playbooks or roles.
+
+* Create a vault file
+# ansible-vault create ansible_vault.yml
+New Vault password:
+Confirm New Vault password:
+
+* Check contents of vault file
+# ansible-vault view ansible_vault.yml
+Vault password:
+# Sample playbook with vault enabled
+
+## Ansible Roles ##
+
+An Ansible role is basically a broken apart playbook. It takes the sections of the playbook and breaks them into several different files.
+
+* Sample Ansible Role directory structure:
+test-role/
+├── defaults
+│   └── main.yml
+├── files
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── README.md
+├── tasks
+│   └── main.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml
+
+8 directories, 8 files
+
+* To create a role:
+# ansible-galaxy init test-role
+
+* Sample playbook to deploy a Wordpress Site(available under repository) using roles - server, mysql, php & wordpress:
+# Check install-wordpress repository.
+
+

@@ -1,0 +1,6 @@
+# Playbook to install PHP
+---
+- name: Install PHP extension
+  yum: name={{ item }} state=present
+  with_items:
+   - php-gd
