@@ -1,0 +1,57 @@
+# Playbook to update Python on CentOS system to v2.7.14
+
+- name: Update Python
+  hosts: webservers
+  tasks:
+   - name: Install prerequisites
+     yum: name={{ item }} state=installed
+     with_items:
+      - wget
+      - zlib-devel
+      - bzip2-devel
+      - openssl-devel
+      - ncurses-devel
+      - sqlite-devel
+      - readline-devel
+      - tk-devel 
+      - gdbm-devel
+      - db4-devel
+      - libpcap-devel
+      - xz-devel
+      - expat-devel
+      - libselinux-python
+      
+   - name: Create Python temporary directory
+     file: 
+      path: /tmp/Python-2.7.14
+      state: directory
+      owner: root
+      group: root
+      mode: 0775
+      
+   - name:  
+     get_url:
+      url: https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz
+      dest: /tmp/Python-2.7.14.tar.xz
+      mode: 0750
+      validate_certs: false
+            
+   - name: Extract Python
+     unarchive:
+      src: /tmp/Python-2.7.14.tar.xz
+      dest: /tmp
+      copy: no
+       
+   - name: Configure and install Python
+     shell: |
+      cd /tmp/Python-2.7.14/
+      ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
+      make && make altinstall
+      
+   - name: Remove temporary directories
+     command: '{{ item }} chdir=/tmp'
+     with_items:
+     - rm -f Python-2.7.14.tar.xz
+     - rm -rf Python-2.7.14
+      
+      

@@ -1,0 +1,9 @@
+[labservers]
+ansible-node1  ansible_user=root  ansible_hostname=ansible-node1
+ansible-node2  ansible_user=root  ansible_hostname=ansible-node2
+
+[webservers]
+ansible-node1 ansible_user=root
+
+[dbservers]
+ansible-node2 ansible_user=root
