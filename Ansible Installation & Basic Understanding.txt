@@ -327,4 +327,9 @@ test-role/
 * Sample playbook to deploy a Wordpress Site(available under repository) using roles - server, mysql, php & wordpress:
 # Check install-wordpress from repository.
 
+## Ansible Galaxy ##
 
+Ansible Galaxy refers to the Galaxy website where users can share roles, reuse roles and to a command line tool for installing, creating and managing roles.
+
+* Usage:
+# ansible-galaxy install <ROLE-NAME>
