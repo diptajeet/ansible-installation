@@ -1,0 +1,13 @@
+# Playbook to stop Linux Firewall
+
+- name: Stopping iptables
+  service: iptables state=stopped enabled=no
+  register: iptables_status
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' and ansible_distribution_version <= '6'
+  
+- name: Stopping iptables
+  service: iptables state=stopped enabled=no
+  register: iptables_status
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' and ansible_distribution_version == '7'
+  
+- debug: msg="IPTables is stopped now"
