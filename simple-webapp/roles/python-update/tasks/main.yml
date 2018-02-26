@@ -19,10 +19,7 @@
    - libselinux-python
    - unzip
    - gcc
-<<<<<<< HEAD
    - MySQL-python
-=======
->>>>>>> ac2a817dd95f52ab8fdbeda550932de1c442b56f
       
 - name: Creating temporary Python directory
   file: 
@@ -54,15 +51,9 @@
 - name: Stripping symbols from the shared library to reduce the memory footprint
   shell: 'strip /usr/local/lib/libpython2.7.so.1.0'
   
-<<<<<<< HEAD
 - name: Copying pip for Python2.7
   copy: 
    src: get-pip.py
-=======
-- name: Downloading pip for Python2.7
-  get_url: 
-   url: https://bootstrap.pypa.io/get-pip.py
->>>>>>> ac2a817dd95f52ab8fdbeda550932de1c442b56f
    dest: /tmp/get-pip.py
    
 - name: Setting up pip for Python2.7

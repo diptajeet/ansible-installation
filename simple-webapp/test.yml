@@ -1,9 +1,0 @@
-- name: Starting the webserver
-  hosts: webservers
-  tasks:
-  - name: Execute
-    shell: |
-     export FLASK_APP=/opt/app.py
-     # nohup python2.7 -m flask run --host=`ip a | grep eth0 | grep inet | cut -d '/' -f1 | awk '{print $2}'` &
-  
-  - debug: msg="Now you can browse the website at http://{{ ansible_all_ipv4_addresses }}:5000"
