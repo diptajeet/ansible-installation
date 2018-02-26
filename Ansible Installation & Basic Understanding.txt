@@ -334,3 +334,8 @@ Ansible Galaxy refers to the Galaxy website where users can share roles, reuse r
 
 * Usage:
 # ansible-galaxy install <ROLE-NAME>
+
+## Sample Use Cases	##
+
+- simple-webapp
+- install-wordpress
