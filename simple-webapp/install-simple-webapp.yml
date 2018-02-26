@@ -6,59 +6,62 @@
    - db_name: database
    - db_user: user
    - db_password: password
-  tasks:
-   - name: Check installed Python version
-     shell: `which rpm` -qa python | cut -d'-' -f2
-     register: python_ver
-      when: python_ver <= 2.7.0
-      role: python-update
+  roles:
+     - stop-firewall
+     - { role: python-update, when: ansible_python_version > 2.7 }
      
-   - name: Install Development tools
+  tasks:
+   - name: Installing Development tools
      yum: name="@Development Tools" state=installed
-
-   - name: Install Python
+     
+   - name: Installing Python addtionals
      yum: name={{ item }} state=installed
      with_items:
       - python
       - python-setuptools
       - python-devel
       - python-pip
-      - MySQL-python
+     when: 'ansible_python_version < 2.7'
       
-   - name: Install MySQL Server and Client
+   - name: Installing MySQL Server and Client
      yum: name={{ item }} state=installed
      with_items:
       - mysql-server
       - mysql
 
-   - name: Start MySQL service
+   - name: Starting MySQL service
      service:
        name: mysqld
        state: started
        enabled: yes
 
-   - name: Create Application Database
+   - name: Creating Application Database
      mysql_db: 
        name: '{{ db_name }}'
        state: present
 
-   - name: Create Database User
+   - name: Creating Database User
      mysql_user:
        name: '{{ db_user }}'
        password: '{{ db_password }}'
        priv: '*.*:ALL'
        state: present
 
-   - name: Install Python Flask dependency
+   - name: Installing Python Flask dependency
      pip:
       name: '{{ item }}'
+      executable: pip2.7
       state: present
      with_items:
        - flask
        - flask-mysql
        
-   - name: Copy Source Code to target server
+   - name: Copying Source Code to target server
      copy: src=app.py dest=/opt/app.py
      
-   - name: Start the webserver
-     shell: export FLASK_APP=/opt/app.py && nohup python -m flask run --host=0.0.0.0 &
+   - name: Starting the webserver
+     shell: |
+      export FLASK_APP=/opt/app.py
+      nohup python2.7 -m flask run --host=`ip a | grep eth0 | grep inet | cut -d '/' -f1 | awk '{print $2}'` &
+     
+   - debug: msg="Now you can browse the website at http://{{ ansible_all_ipv4_addresses }}:5000"

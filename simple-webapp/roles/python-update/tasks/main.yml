@@ -1,0 +1,68 @@
+# Playbook to update Python on CentOS system to v2.7.14
+
+- name: Starting Python update since the current version is less than 2.7
+  yum: name={{ item }} state=installed
+  with_items:
+   - wget
+   - zlib-devel
+   - bzip2-devel
+   - openssl-devel
+   - ncurses-devel
+   - sqlite-devel
+   - readline-devel
+   - tk-devel 
+   - gdbm-devel
+   - db4-devel
+   - libpcap-devel
+   - xz-devel
+   - expat-devel
+   - libselinux-python
+   - unzip
+   - gcc
+   - MySQL-python
+      
+- name: Creating temporary Python directory
+  file: 
+   path: /tmp/Python-2.7.14
+   state: directory
+   owner: root
+   group: root
+   mode: 0750
+   
+- name: Downloading Python source tarball 
+  get_url:
+   url: https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
+   dest: /tmp/Python-2.7.14.tgz
+   mode: 0750
+   validate_certs: false
+         
+- name: Extracting Python tarball
+  unarchive:
+   src: /tmp/Python-2.7.14.tgz
+   dest: /tmp
+   copy: no
+    
+- name: Configuring and installing Python, be patient!
+  shell: |
+   cd /tmp/Python-2.7.14/
+   ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
+   make && make altinstall
+   
+- name: Stripping symbols from the shared library to reduce the memory footprint
+  shell: 'strip /usr/local/lib/libpython2.7.so.1.0'
+  
+- name: Copying pip for Python2.7
+  copy: 
+   src: get-pip.py
+   dest: /tmp/get-pip.py
+   
+- name: Setting up pip for Python2.7
+  command: 'python2.7 /tmp/get-pip.py'
+   
+- name: You are good to go!! Removing temporary installation directories
+  command: '{{ item }} chdir=/tmp'
+  with_items:
+  - rm -f Python-2.7.14.tgz
+  - rm -rf Python-2.7.14
+   
+      

@@ -4,8 +4,9 @@
 # subscription-manager register
 # subscription-manager repos
 # subscription-manager status
-# subscription-manager auto-attach
-# yum repolist all
+# subscription-manager attach --auto
+# subscription-manager repos --list-enabled
+# subscription-manager repos --list
 # subscription-manager repos --enable rhel-7-server-extras-rpms
 # yum repolist enabled
 # yum info ansible
