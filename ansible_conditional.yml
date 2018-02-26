@@ -1,7 +1,6 @@
 # Playbook with conditional example
 ---
 - name: Playbook with conditional example
-  gather_facts: false
   hosts: labservers
   tasks:
    - name: Check conditional in ansible

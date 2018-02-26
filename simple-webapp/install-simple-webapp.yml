@@ -7,9 +7,14 @@
    - db_user: user
    - db_password: password
   roles:
+<<<<<<< HEAD
      - stop-firewall
      - { role: python-update, when: ansible_python_version > 2.7 }
      
+=======
+     - { role: python-update, when: ansible_python_version > 2.7 }
+  #   - stop-firewall
+>>>>>>> ac2a817dd95f52ab8fdbeda550932de1c442b56f
   tasks:
    - name: Installing Development tools
      yum: name="@Development Tools" state=installed
@@ -21,6 +26,10 @@
       - python-setuptools
       - python-devel
       - python-pip
+<<<<<<< HEAD
+=======
+      - MySQL-python
+>>>>>>> ac2a817dd95f52ab8fdbeda550932de1c442b56f
      when: 'ansible_python_version < 2.7'
       
    - name: Installing MySQL Server and Client
